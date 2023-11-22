@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OAuth Redirect</title>
+    <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+    <script>
+        Office.initialize = function (reason) {
+            // The page is initialized and the Office.js library is loaded
+            // Now, extract the auth code from the URL
+            var authCode = getAuthCodeFromUrl();
+
+            // Use Office APIs to send the auth code to the parent page
+            Office.context.ui.messageParent(JSON.stringify({status: "success", authCode: authCode}));
+        };
+
+        function getAuthCodeFromUrl() {
+            // Parse the URL to get the auth code
+            var searchParams = new URLSearchParams(window.location.search);
+            return searchParams.get("code"); // Assuming the auth code is returned as a 'code' query parameter
+        }
+    </script>
+</head>
+<body>
+    Please wait...
+</body>
+</html>
