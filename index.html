@@ -6,25 +6,25 @@
     <script>
         Office.initialize = function (reason) {
             try {
-                // The page is initialized, and the Office.js library is loaded.
-                // Now, extract the auth code from the URL.
-                let authCode = getAuthCodeFromUrl();
+                // Initialize the page and load the Office.js library.
+                // Extract auth code and access token from the URL.
+                let authResponse = getAuthResponseFromUrl();
 
-                if (authCode) {
-                    // Construct a JSON object with status and auth code
+                if (authResponse.code || authResponse.access_token) {
+                    // Construct a JSON object with status, auth code, and access token.
                     const response = {
                         Status: "Success",
-                        AuthCode: authCode
+                        AuthCode: authResponse.code || "",
+                        AccessToken: authResponse.access_token || ""
                     };
 
                     // Use Office APIs to send the JSON back to the parent page.
                     Office.context.ui.messageParent(JSON.stringify(response), {targetOrigin: "*"});
                 } else {
-                    // No auth code found, send a JSON with an error status
+                    // No auth code or access token found, send a JSON with an error status.
                     const response = {
                         Status: "Error",
-                        AuthCode: "",
-                        Message: "Authorization code not found."
+                        Message: "Authorization code or access token not found."
                     };
 
                     Office.context.ui.messageParent(JSON.stringify(response), {targetOrigin: "*"});
@@ -33,18 +33,22 @@
                 // Catch and handle any exceptions.
                 const response = {
                     Status: "Error",
-                    AuthCode: "",
-                    Message: error.message
+                    Message: "Error processing the authentication response: " + error.message
                 };
 
                 Office.context.ui.messageParent(JSON.stringify(response), {targetOrigin: "*"});
             }
         };
 
-        function getAuthCodeFromUrl() {
-            // Parse the URL to get the auth code.
+        function getAuthResponseFromUrl() {
+            // Parse the URL to get the auth code and access token.
             let searchParams = new URLSearchParams(window.location.search);
-            return searchParams.get("code"); // Assuming the auth code is returned as a 'code' query parameter.
+            let hashParams = new URLSearchParams(window.location.hash.substr(1)); // Remove '#' and parse.
+
+            return {
+                code: searchParams.get("code"), // Assuming the auth code is returned as a 'code' query parameter.
+                access_token: hashParams.get("access_token") // Assuming the access token is returned in the URL fragment.
+            };
         }
     </script>
 </head>
