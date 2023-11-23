@@ -10,7 +10,7 @@
             let authCode = getAuthCodeFromUrl();
 
             // Use Office APIs to send the auth code to the parent page
-            Office.context.ui.messageParent(authCode, {targetOrigin: "https://localhost:44359/Home.html?_host_Info=Excel$Win32$16.01$en-US$$$$0"});
+            Office.context.ui.messageParent(authCode, {targetOrigin: "https://localhost:44359"});
         };
 
         function getAuthCodeFromUrl() {
