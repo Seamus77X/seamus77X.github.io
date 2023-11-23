@@ -1,27 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>OAuth Redirect</title>
+    <title>Dialog Page</title>
     <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
-    <script>
-        Office.initialize = function (reason) {
-            // The page is initialized and the Office.js library is loaded
-            // Now, extract the auth code from the URL
-            let authCode = getAuthCodeFromUrl();
-
-            // Use Office APIs to send the auth code to the parent page
-            Office.context.ui.messageParent(authCode, {targetOrigin: "https://localhost:44359"});
-        };
-
-        function getAuthCodeFromUrl() {
-            // Parse the URL to get the auth code
-            let searchParams = new URLSearchParams(window.location.search);
-	    console.log(searchParams.get("code"))
-            return searchParams.get("code"); // Assuming the auth code is returned as a 'code' query parameter
-        }
-    </script>
 </head>
 <body>
-    Please wait...
+    <p>Dialog content goes here.</p>
+    <button id="sendMessageButton">Send Message to Add-In</button>
+    <script>
+        Office.initialize = function () {
+            document.getElementById("sendMessageButton").onclick = function () {
+                sendMessageToParent("This is the message from the dialog.");
+            };
+        };
+
+        function sendMessageToParent(message) {
+            Office.context.ui.messageParent(message, {targetOrigin: "*"});
+        }
+    </script>
 </body>
 </html>
