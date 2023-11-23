@@ -16,7 +16,6 @@
         function getAuthCodeFromUrl() {
             // Parse the URL to get the auth code
             let searchParams = new URLSearchParams(window.location.search);
-	    console.log(searchParams.get("code"))
             return searchParams.get("code"); // Assuming the auth code is returned as a 'code' query parameter
         }
     </script>
