@@ -11,15 +11,33 @@
                 let authCode = getAuthCodeFromUrl();
 
                 if (authCode) {
-                    // Use Office APIs to send the auth code to the parent page.
-                    Office.context.ui.messageParent(authCode, {targetOrigin: "*"});
+                    // Construct a JSON object with status and auth code
+                    const response = {
+                        Status: "Success",
+                        AuthCode: authCode
+                    };
+
+                    // Use Office APIs to send the JSON back to the parent page.
+                    Office.context.ui.messageParent(JSON.stringify(response), {targetOrigin: "*"});
                 } else {
-                    // No auth code found, send an error message.
-                    Office.context.ui.messageParent('Error: Authorization code not found.', {targetOrigin: "*"});
+                    // No auth code found, send a JSON with an error status
+                    const response = {
+                        Status: "Error",
+                        AuthCode: "",
+                        Message: "Authorization code not found."
+                    };
+
+                    Office.context.ui.messageParent(JSON.stringify(response), {targetOrigin: "*"});
                 }
             } catch (error) {
                 // Catch and handle any exceptions.
-                Office.context.ui.messageParent(`Error: ${error.message}`, {targetOrigin: "*"});
+                const response = {
+                    Status: "Error",
+                    AuthCode: "",
+                    Message: error.message
+                };
+
+                Office.context.ui.messageParent(JSON.stringify(response), {targetOrigin: "*"});
             }
         };
 
