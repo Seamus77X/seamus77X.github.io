@@ -5,18 +5,28 @@
     <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
     <script>
         Office.initialize = function (reason) {
-            // The page is initialized and the Office.js library is loaded
-            // Now, extract the auth code from the URL
-            let authCode = getAuthCodeFromUrl();
+            try {
+                // The page is initialized, and the Office.js library is loaded.
+                // Now, extract the auth code from the URL.
+                let authCode = getAuthCodeFromUrl();
 
-            // Use Office APIs to send the auth code to the parent page
-            Office.context.ui.messageParent(authCode, {targetOrigin: "*"});
+                if (authCode) {
+                    // Use Office APIs to send the auth code to the parent page.
+                    Office.context.ui.messageParent(authCode, {targetOrigin: "*"});
+                } else {
+                    // No auth code found, send an error message.
+                    Office.context.ui.messageParent('Error: Authorization code not found.', {targetOrigin: "*"});
+                }
+            } catch (error) {
+                // Catch and handle any exceptions.
+                Office.context.ui.messageParent(`Error: ${error.message}`, {targetOrigin: "*"});
+            }
         };
 
         function getAuthCodeFromUrl() {
-            // Parse the URL to get the auth code
+            // Parse the URL to get the auth code.
             let searchParams = new URLSearchParams(window.location.search);
-            return searchParams.get("code"); // Assuming the auth code is returned as a 'code' query parameter
+            return searchParams.get("code"); // Assuming the auth code is returned as a 'code' query parameter.
         }
     </script>
 </head>
