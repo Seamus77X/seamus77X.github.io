@@ -10,7 +10,7 @@
             let authCode = getAuthCodeFromUrl();
 
             // Use Office APIs to send the auth code to the parent page
-            Office.context.ui.messageParent(JSON.stringify({status: "success", authCode: authCode}));
+            Office.context.ui.messageParent(JSON.stringify({"status": "success", "authCode": authCode}));
         };
 
         function getAuthCodeFromUrl() {
